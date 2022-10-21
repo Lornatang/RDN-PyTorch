@@ -39,9 +39,8 @@ def choice_device(device_type: str) -> torch.device:
 def build_model(model_arch_name: str, device: torch.device) -> nn.Module:
     # Initialize the super-resolution model
     sr_model = model.__dict__[model_arch_name](in_channels=3,
-                                               encoder_channels=64,
                                                out_channels=3,
-                                               channels=256)
+                                               channels=64)
     sr_model = sr_model.to(device=device)
 
     return sr_model
@@ -94,7 +93,7 @@ if __name__ == "__main__":
                         help="Model upscale factor")
     parser.add_argument("--model_weights_path",
                         type=str,
-                        default="./results/RDN_small-DIV2K/best.pth.tar",
+                        default="./results/pretrained_models/RDN_small_x4-DIV2K-543022e7.pth.tar",
                         help="Model weights file path.")
     parser.add_argument("--device_type",
                         type=str,

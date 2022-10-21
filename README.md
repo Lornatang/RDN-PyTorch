@@ -1,25 +1,25 @@
-# LTE-PyTorch
+# RDN-PyTorch
 
 ## Overview
 
 This repository contains an op-for-op PyTorch reimplementation
-of [Local Texture Estimator for Implicit Representation Function](https://arxiv.org/pdf/2111.08918v6.pdf).
+of [Residual Dense Network for Image Super-Resolution](https://arxiv.org/abs/1802.08797v2).
 
 ## Table of contents
 
-- [LTE-PyTorch](#lte-pytorch)
+- [RDN-PyTorch](#rdn-pytorch)
     - [Overview](#overview)
     - [Table of contents](#table-of-contents)
     - [Download weights](#download-weights)
     - [Download datasets](#download-datasets)
     - [How Test and Train](#how-test-and-train)
         - [Test](#test)
-        - [Train LTE model](#train-lte-model)
-        - [Resume train LTE model](#resume-train-lte-model)
+        - [Train RDN model](#train-rdn-model)
+        - [Resume train RDN model](#resume-train-rdn-model)
     - [Result](#result)
     - [Contributing](#contributing)
     - [Credit](#credit)
-        - [Local Texture Estimator for Implicit Representation Function](#local-texture-estimator-for-implicit-representation-function)
+        - [Residual Dense Network for Image Super-Resolution](#residual-dense-network-for-image-super-resolution)
 
 ## Download weights
 
@@ -43,36 +43,39 @@ Both training and testing only need to modify the `config.py` file.
 
 modify the `config.py`
 
-- line 31: `model_arch_name` change to `lte_edsr`.
+- line 31: `model_arch_name` change to `rdn_small_x4`.
 - line 37: `upscale_factor` change to `4`.
 - line 39: `mode` change to `test`.
-- line 89: `model_weights_path` change to `./results/pretrained_models/LTE_EDSR-DIV2K-353eb572.pth.tar`.
+- line 40: `exp_name` change to `test_RDN_small_x4-DIV2K`.
+- line 88: `model_weights_path` change to `./results/pretrained_models/RDN_small_x4-DIV2K-543022e7.pth.tar`.
 -
 
 ```bash
 python3 test.py
 ```
 
-### Train LTE model
+### Train RDN model
 
 modify the `config.py`
 
-- line 31: `model_arch_name` change to `lte_edsr`.
+- line 31: `model_arch_name` change to `rdn_small_x4`.
 - line 37: `upscale_factor` change to `4`.
 - line 39: `mode` change to `train`.
+- line 40: `exp_name` change to `RDN_small_x4-DIV2K`.
 
 ```bash
 python3 train.py
 ```
 
-### Resume train LTE model
+### Resume train RDN model
 
-modify the `lte.py`
+modify the `config.py`
 
-- line 31: `model_arch_name` change to `lte_edsr`.
+- line 31: `model_arch_name` change to `rdn_small_x4`.
 - line 37: `upscale_factor` change to `4`.
 - line 39: `mode` change to `train`.
-- line 58: `resume_model_weights_path` change to `./results/LTE_EDSR-DIV2K/epoch_xxx.pth.tar`.
+- line 40: `exp_name` change to `RDN_small_x4-DIV2K`.
+- line 57: `resume_model_weights_path` change to `./results/RDN_small_x4-DIV2K/epoch_xxx.pth.tar`.
 
 ```bash
 python3 train.py
@@ -80,34 +83,33 @@ python3 train.py
 
 ## Result
 
-Source of original paper results: [https://arxiv.org/pdf/2111.08918v6.pdf](https://arxiv.org/pdf/2111.08918v6.pdf)
+Source of original paper results: [https://arxiv.org/abs/1802.08797v2](https://arxiv.org/abs/1802.08797v2)
 
 In the following table, the psnr value in `()` indicates the result of the project, and `-` indicates no test.
 
-|  Method  | Scale |      Set5 (PSNR/SSIM)      |     Set14 (PSNR/SSIM)      | 
-|:--------:|:-----:|:--------------------------:|:--------------------------:|
-| LTE_EDSR |   2   | -(**32.71**)/-(**0.9018**) | -(**28.96**)/-(**0.7917**) | 
-| LTE_EDSR |   3   | -(**32.71**)/-(**0.9018**) | -(**28.96**)/-(**0.7917**) |
-| LTE_EDSR |   4   | -(**32.71**)/-(**0.9018**) | -(**28.96**)/-(**0.7917**) | 
-
+|  Method   | Scale |      Set5 (PSNR/SSIM)      |     Set14 (PSNR/SSIM)      | 
+|:---------:|:-----:|:--------------------------:|:--------------------------:|
+| RDN_small |   2   | -(**32.71**)/-(**0.9018**) | -(**28.96**)/-(**0.7917**) | 
+| RDN_small |   3   | -(**32.71**)/-(**0.9018**) | -(**28.96**)/-(**0.7917**) |
+| RDN_small |   4   | -(**32.71**)/-(**0.9018**) | -(**28.96**)/-(**0.7917**) | 
 
 ```bash
-# Download `LTE_EDSR-DIV2K-.pth.tar` weights to `./results/pretrained_models`
+# Download `RDN_small_x4-DIV2K-543022e7.pth.tar` weights to `./results/pretrained_models/RDN_small_x4-DIV2K-543022e7.pth.tar`
 # More detail see `README.md<Download weights>`
 python3 ./inference.py
 ```
 
 Input:
 
-<span align="center"><img width="492" height="480" src="figure/baboon_lr.png"/></span>
+<span align="center"><img width="480" height="312" src="figure/119082_lr.png"/></span>
 
 Output:
 
-<span align="center"><img width="492" height="480" src="figure/baboon_sr.png"/></span>
+<span align="center"><img width="480" height="312" src="figure/119082_sr.png"/></span>
 
 ```text
-Build `lte_edsr` model successfully.
-Load `lte_edsr` model weights `./results/pretrained_models/LTE_EDSR-DIV2K-.pth.tar` successfully.
+Build `rdn_small_x4` model successfully.
+Load `rdn_small_x4` model weights `./results/pretrained_models/RDN_small_x4-DIV2K-543022e7.pth.tar` successfully.
 SR image save to `./figure/baboon_lr.png`
 ```
 
@@ -120,28 +122,31 @@ I look forward to seeing what the community does with these models!
 
 ## Credit
 
-### Local Texture Estimator for Implicit Representation Function
+### Residual Dense Network for Image Super-Resolution
 
-_Jaewon Lee, Kyong Hwan Jin_ <br>
+_Yulun Zhang, Yapeng Tian, Yu Kong, Bineng Zhong, Yun Fu_ <br>
 
 **Abstract** <br>
-Recent works with an implicit neural function shed light on representing images in arbitrary resolution. However, a
-standalone multi-layer perceptron shows limited performance in learning high-frequency components. In this paper, we
-propose a Local Texture Estimator (LTE), a dominant-frequency estimator for natural images, enabling an implicit
-function to capture fine details while reconstructing images in a continuous manner. When jointly trained with a deep
-super-resolution (SR) architecture, LTE is capable of characterizing image textures in 2D Fourier space. We show that an
-LTE-based neural function achieves favorable performance against existing deep SR methods within an arbitrary-scale
-factor. Furthermore, we demonstrate that our implementation takes the shortest running time compared to previous works.
+A very deep convolutional neural network (CNN) has recently achieved great success for image super-resolution (SR) and
+offered hierarchical features as well. However, most deep CNN based SR models do not make full use of the hierarchical
+features from the original low-resolution (LR) images, thereby achieving relatively-low performance. In this paper, we
+propose a novel residual dense network (RDN) to address this problem in image SR. We fully exploit the hierarchical
+features from all the convolutional layers. Specifically, we propose residual dense block (RDB) to extract abundant
+local features via dense connected convolutional layers. RDB further allows direct connections from the state of
+preceding RDB to all the layers of current RDB, leading to a contiguous memory (CM) mechanism. Local feature fusion in
+RDB is then used to adaptively learn more effective features from preceding and current local features and stabilizes
+the training of wider network. After fully obtaining dense local features, we use global feature fusion to jointly and
+adaptively learn global hierarchical features in a holistic way. Extensive experiments on benchmark datasets with
+different degradation models show that our RDN achieves favorable performance against state-of-the-art methods.
 
-[[Paper]](https://arxiv.org/pdf/2111.08918v6.pdf) [[Code]](https://github.com/jaewon-lee-b/lte)
+[[Paper]](https://arxiv.org/abs/1802.08797v2) [[Code]](https://github.com/jaewon-lee-b/rdn)
 
 ```bibtex
-@InProceedings{lte-jaewon-lee,
-    author    = {Lee, Jaewon and Jin, Kyong Hwan},
-    title     = {Local Texture Estimator for Implicit Representation Function},
-    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-    month     = {June},
-    year      = {2022},
-    pages     = {1929-1938}
+@inproceedings{zhang2018residual,
+  title={Residual dense network for image super-resolution},
+  author={Zhang, Yulun and Tian, Yapeng and Kong, Yu and Zhong, Bineng and Fu, Yun},
+  booktitle={Proceedings of the IEEE conference on computer vision and pattern recognition},
+  pages={2472--2481},
+  year={2018}
 }
 ```
