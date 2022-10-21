@@ -87,11 +87,11 @@ Source of original paper results: [https://arxiv.org/abs/1802.08797v2](https://a
 
 In the following table, the psnr value in `()` indicates the result of the project, and `-` indicates no test.
 
-|  Method   | Scale |      Set5 (PSNR/SSIM)      |     Set14 (PSNR/SSIM)      | 
-|:---------:|:-----:|:--------------------------:|:--------------------------:|
-| RDN_small |   2   | -(**32.71**)/-(**0.9018**) | -(**28.96**)/-(**0.7917**) | 
-| RDN_small |   3   | -(**32.71**)/-(**0.9018**) | -(**28.96**)/-(**0.7917**) |
-| RDN_small |   4   | -(**32.71**)/-(**0.9018**) | -(**28.96**)/-(**0.7917**) | 
+|  Method   | Scale |          Set5 (PSNR/SSIM)           |          Set14 (PSNR/SSIM)          | 
+|:---------:|:-----:|:-----------------------------------:|:-----------------------------------:|
+| RDN_small |   2   | 38.24(**38.11**)/0.9614(**0.9615**) | 34.01(**33.70**)/0.9212(**0.9185**) | 
+| RDN_small |   3   | 34.71(**33.99**)/0.9296(**0.9240**) | 30.57(**30.06**)/0.8468(**0.8384**) |
+| RDN_small |   4   | 32.47(**32.34**)/0.8990(**0.8977**) | 28.81(**28.71**)/0.7871(**0.7855**) | 
 
 ```bash
 # Download `RDN_small_x4-DIV2K-543022e7.pth.tar` weights to `./results/pretrained_models/RDN_small_x4-DIV2K-543022e7.pth.tar`

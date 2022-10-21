@@ -22,7 +22,6 @@ import config
 import imgproc
 import model
 from image_quality_assessment import PSNR, SSIM
-from utils import make_coord
 from utils import make_directory
 
 model_names = sorted(
@@ -33,7 +32,6 @@ model_names = sorted(
 def main() -> None:
     # Initialize the super-resolution sr_model
     sr_model = model.__dict__[config.model_arch_name](in_channels=config.in_channels,
-                                                      encoder_channels=config.encoder_channels,
                                                       out_channels=config.out_channels,
                                                       channels=config.channels)
     sr_model = sr_model.to(device=config.device)
@@ -73,41 +71,12 @@ def main() -> None:
         lr_image_path = os.path.join(config.lr_dir, file_names[index])
 
         print(f"Processing `{os.path.abspath(gt_image_path)}`...")
-        # Read LR image and HR image
-        gt_image = cv2.imread(gt_image_path).astype(np.float32) / 255.0
-        lr_image = cv2.imread(lr_image_path).astype(np.float32) / 255.0
-
-        # Convert BGR channel image format data to RGB channel image format data
-        gt_image = cv2.cvtColor(gt_image, cv2.COLOR_BGR2RGB)
-        lr_image = cv2.cvtColor(lr_image, cv2.COLOR_BGR2RGB)
-
-        # Convert RGB channel image format data to Tensor channel image format data
-        gt_tensor = imgproc.image_to_tensor(gt_image, False, False)
-        lr_tensor = imgproc.image_to_tensor(lr_image, False, False)
-        gt_tensor_coord = make_coord(gt_tensor.contiguous().shape[-2:])
-        gt_tensor_contiguous = gt_tensor.contiguous().view(3, -1).permute(1, 0)
-        gt_tensor_cell = torch.ones_like(gt_tensor_coord)
-        gt_tensor_cell[:, 0] *= 2 / gt_tensor.shape[-2]
-        gt_tensor_cell[:, 1] *= 2 / gt_tensor.shape[-1]
-
-        # Transfer Tensor channel image format data to CUDA device
-        gt_tensor_contiguous = gt_tensor_contiguous.unsqueeze_(0).to(device=config.device, non_blocking=True)
-        gt_tensor_coord = gt_tensor_coord.unsqueeze_(0).to(device=config.device, non_blocking=True)
-        gt_tensor_cell = gt_tensor_cell.unsqueeze_(0).to(device=config.device, non_blocking=True)
-        lr_tensor = lr_tensor.unsqueeze_(0).to(device=config.device, non_blocking=True)
+        lr_tensor = imgproc.preprocess_one_image(lr_image_path, config.device)
+        gt_tensor = imgproc.preprocess_one_image(gt_image_path, config.device)
 
         # Only reconstruct the Y channel image data.
         with torch.no_grad():
-            sr_tensor = sr_model(lr_tensor, gt_tensor_coord, gt_tensor_cell)
-
-        # N,C,HW to N,C,H,W
-        batch_size, channels, lr_image_height, lr_image_width = lr_tensor.shape
-        shape = [batch_size,
-                 round(lr_image_height * config.upscale_factor),
-                 round(lr_image_width * config.upscale_factor),
-                 channels]
-        sr_tensor = sr_tensor.view(*shape).permute(0, 3, 1, 2).contiguous()
-        gt_tensor = gt_tensor_contiguous.view(*shape).permute(0, 3, 1, 2).contiguous()
+            sr_tensor = sr_model(lr_tensor)
 
         # Save image
         sr_image = imgproc.tensor_to_image(sr_tensor, False, False)
