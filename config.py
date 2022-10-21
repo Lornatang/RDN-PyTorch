@@ -37,7 +37,7 @@ upscale_factor = 4
 # Current configuration parameter method
 mode = "train"
 # Experiment name, easy to save weights and log files
-exp_name = "RDN_small-DIV2K"
+exp_name = "RDN_small_x4-DIV2K"
 
 if mode == "train":
     # Dataset address
