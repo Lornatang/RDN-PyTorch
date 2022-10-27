@@ -20,7 +20,7 @@ from torch import nn
 
 __all__ = [
     "RDN",
-    "rdn_small_x2", "rdn_small_x3", "rdn_small_x4", "rdn_large_x8",
+    "rdn_small_x2", "rdn_small_x3", "rdn_small_x4", "rdn_small_x8",
     "rdn_large_x2", "rdn_large_x3", "rdn_large_x4", "rdn_large_x8",
 ]
 
